@@ -17,7 +17,7 @@ git commit -m "`date`"
 if [ $? -eq 0 ]; then
   $WEBPSH
   cd $LUME_DIR || exit
-  # deno task lume --dest=$BUILD_DIR > /dev/null
+  # deno task lume --dest=$BUILD_DIR
   deno task lume --dest=$BUILD_DIR > /dev/null 2>&1
 else
   exit 1
