@@ -9,8 +9,8 @@ export DENO_INSTALL="/home/$USER/.deno"
 export PATH="$DENO_INSTALL/bin:$PATH"
 
 cd "$SRC_DIR" || exit
-
-git add . || git init && git add . || exit
+ls "$SRC_DIR/.git" ||　git init || exit
+git add . || exit
 
 git commit -m "`date`"
 
