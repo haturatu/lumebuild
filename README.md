@@ -15,6 +15,7 @@ This script automates the following tasks:
 - Lume static site generator
 - Git
 - WebP conversion tool (optional)
+  
 [WebP convert scripts are in this repository of mine](https://github.com/haturatu/webpsh)
 
 ## Configuration
