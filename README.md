@@ -15,6 +15,7 @@ This script automates the following tasks:
 - Lume static site generator
 - Git
 - WebP conversion tool (optional)
+[WebP convert scripts are in this repository of mine](https://github.com/haturatu/webpsh)
 
 ## Configuration
 
@@ -24,6 +25,7 @@ LUME_DIR="/your/lume/dir"        # Path to your Lume project directory
 SRC_DIR="$LUME_DIR/src"          # Path to your Lume source directory
 BUILD_DIR="site"                 # Path to your Lume output directory
 WEBPSH="/your/webp/convert/path" # Path to WebP conversion script optional
+COMMIT_COMMENT="`date`"          # Your fav commit comment
 ```
 
 ## Usage
