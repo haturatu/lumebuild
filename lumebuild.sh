@@ -21,6 +21,11 @@ git_commit() {
   git commit -m "$COMMIT_COMMENT"
 }
 
+build() {
+  cd $LUME_DIR || exit
+  deno task lume --dest=$BUILD_DIR > /dev/null 2>&1
+}
+
 git_commit
 
 if [ $? -eq 0 ]; then
@@ -30,7 +35,7 @@ if [ $? -eq 0 ]; then
   grep "^comments:" "$(ls -tr | tail -1)"
 
   if [ $? -eq 0 ]; then
-    break
+    build
   else
     LAST_POST=`ls -tr | tail -1`
     POST_URL=`echo "$BLOG_URL/$POST_URL_DIR/$LAST_POST" | sed "s/\.md//g"`
@@ -52,10 +57,7 @@ EOF`
     git_commit
   fi
 
-  # deno task lume --dest=$BUILD_DIR
-  cd $LUME_DIR || exit
-  deno task lume --dest=$BUILD_DIR > /dev/null 2>&1
+  build
 else
   exit 1
 fi
-
