@@ -4,6 +4,7 @@
 LUME_DIR="/your/lume/dir"
 SRC_DIR="$LUME_DIR/src"
 BUILD_DIR="site"
+FEDI_CMT="y"
 
 # OPTIONAL
 BLOG_URL="https://yourblog.url"
@@ -26,17 +27,7 @@ build() {
   deno task lume --dest=$BUILD_DIR > /dev/null 2>&1
 }
 
-git_commit
-
-if [ $? -eq 0 ]; then
-  $WEBPSH
-
-  cd $SRC_DIR/$POST_URL_DIR || exit
-  grep "^comments:" "$(ls -tr | tail -1)"
-
-  if [ $? -eq 0 ]; then
-    build
-  else
+fedi_posts() {
     LAST_POST=`ls -tr | tail -1`
     POST_URL=`echo "$BLOG_URL/$POST_URL_DIR/$LAST_POST" | sed "s/\.md//g"`
     TITLE=`grep "^title: " "$LAST_POST" | sed "s/^title: //g"`
@@ -53,11 +44,28 @@ EOF`
           print ins
         }
       }
-      {print} ' "$LAST_POST" > tmp && mv tmp "$LAST_POST"
-    git_commit
-  fi
 
-  build
+      {print} ' "$LAST_POST" > tmp && mv tmp "$LAST_POST"
+}
+
+git_commit
+
+if [ $? -eq 0 ]; then
+  $WEBPSH
+
+  cd $SRC_DIR/$POST_URL_DIR || exit
+  grep "^comments:" "$(ls -tr | tail -1)"
+
+  if [ $? -eq 0 ]; then
+    build
+    exit 0
+  else
+    if [ "$FEDI_CMT" = "y" ]; then
+     fedi_posts
+     git_commit
+     build
+    fi
+  fi
 else
   exit 1
 fi
