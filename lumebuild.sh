@@ -46,7 +46,7 @@ EOF`
       }
 
       {print} ' "$LAST_POST" > tmp && mv tmp "$LAST_POST"
-      sed -i '/comments: {}/d' "$LAST_POST"
+    sed -i '/comments: {}/d' "$LAST_POST"
 }
 
 git_commit
