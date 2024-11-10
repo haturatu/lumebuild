@@ -29,7 +29,7 @@ build() {
 
 fedi_posts() {
     LAST_POST=`ls -tr | tail -1`
-    POST_URL=`echo "$BLOG_URL/$POST_URL_DIR/$LAST_POST" | sed "s/\.md//g"`
+    POST_URL=`echo "$BLOG_URL/$POST_URL_DIR/$LAST_POST/" | sed "s/\.md//g"`
     TITLE=`grep "^title: " "$LAST_POST" | sed "s/^title: //g"`
     MSTDN_URL=`toot post "$TITLE - $POST_URL" | sed "s/Toot posted: //g" `
     INS_TXT=`cat <<EOF
@@ -46,6 +46,7 @@ EOF`
       }
 
       {print} ' "$LAST_POST" > tmp && mv tmp "$LAST_POST"
+      sed -i '/comments: {}/d' "$LAST_POST"
 }
 
 git_commit
@@ -54,7 +55,7 @@ if [ $? -eq 0 ]; then
   $WEBPSH
 
   cd $SRC_DIR/$POST_URL_DIR || exit
-  grep "^comments:" "$(ls -tr | tail -1)"
+  grep "^comments:$" "$(ls -tr | tail -1)"
 
   if [ $? -eq 0 ]; then
     build
