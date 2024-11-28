@@ -15,6 +15,15 @@ COMMIT_COMMENT="`echo "Memory" && free -h | head -2 | awk  '{print $(NF-5)"," $(
 export DENO_INSTALL="/home/$USER/.deno"
 export PATH="$DENO_INSTALL/bin:$PATH"
 
+commands=("deno" "git" "toot" "cwebp")
+
+for cmd in "${commands[@]}"; do
+  if ! command -v "$cmd" >/dev/null 2>&1; then
+      echo "Please install: $cmd"
+      exit 1
+  fi
+done
+
 git_commit() {
   cd "$SRC_DIR" || exit
   ls "$SRC_DIR/.git" || git init || exit
