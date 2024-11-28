@@ -4,13 +4,13 @@
 LUME_DIR="/your/lume/dir"
 SRC_DIR="$LUME_DIR/src"
 BUILD_DIR="site"
-FEDI_CMT="y"
 
 # OPTIONAL
 BLOG_URL="https://yourblog.url"
 POST_URL_DIR="posts"
 WEBPSH="/your/webp/convert/path"
 COMMIT_COMMENT="`echo "Memory" && free -h | head -2 | awk  '{print $(NF-5)"," $(NF-4)"," $(NF-3)}' | column -t -s ","`"
+FEDI_CMT="y"
 
 export DENO_INSTALL="/home/$USER/.deno"
 export PATH="$DENO_INSTALL/bin:$PATH"
