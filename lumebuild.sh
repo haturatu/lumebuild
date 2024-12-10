@@ -1,20 +1,25 @@
 #!/bin/bash
 
+#######################
 # CONFIG
+#######################
 LUME_DIR="/your/lume/dir"
 SRC_DIR="$LUME_DIR/src"
 BUILD_DIR="site"
 
+########################
 # OPTIONAL
+########################
 BLOG_URL="https://yourblog.url"
 POST_URL_DIR="posts"
 WEBPSH="/your/webp/convert/path"
 COMMIT_COMMENT="`echo "Memory" && free -h | head -2 | awk  '{print $(NF-5)"," $(NF-4)"," $(NF-3)}' | column -t -s ","`"
 FEDI_CMT="y"
 
-export DENO_INSTALL="/home/$USER/.deno"
-export PATH="$DENO_INSTALL/bin:$PATH"
+# Deno Env
+export DENO_INSTALL="/home/$USER/.deno"; export PATH="$DENO_INSTALL/bin:$PATH"
 
+# Commands check
 commands=("deno" "git" "toot" "cwebp")
 
 for cmd in "${commands[@]}"; do
@@ -58,13 +63,17 @@ EOF`
     sed -i '/comments: {}/d' "$LAST_POST"
 }
 
+########################
+# Main
+########################
+
 git_commit
 
 if [ $? -eq 0 ]; then
   $WEBPSH
 
   cd $SRC_DIR/$POST_URL_DIR || exit
-  grep "^comments:$" "$(ls -tr | tail -1)"
+  egrep "^comments:.?.?.?$" "$(ls -tr | tail -1)"
 
   if [ $? -eq 0 ]; then
     build
