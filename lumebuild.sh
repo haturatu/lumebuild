@@ -73,7 +73,7 @@ if [ $? -eq 0 ]; then
   $WEBPSH
 
   cd $SRC_DIR/$POST_URL_DIR || exit
-  egrep "^comments:.?.?.?$" "$(ls -tr | tail -1)"
+  egrep "^comments:" "$(ls -tr | tail -1)" | grep "}"
 
   if [ $? -eq 0 ]; then
     build
