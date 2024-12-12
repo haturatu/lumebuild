@@ -76,15 +76,16 @@ if [ $? -eq 0 ]; then
   egrep "^comments:" "$(ls -tr | tail -1)" | grep "}"
 
   if [ $? -eq 0 ]; then
+    if [ "$FEDI_CMT" = "y" ]; then
+      fedi_posts
+      git_commit
+      build
+    fi
+  else
     build
     exit 0
-  else
-    if [ "$FEDI_CMT" = "y" ]; then
-     fedi_posts
-     git_commit
-     build
-    fi
   fi
 else
   exit 1
 fi
+
