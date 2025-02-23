@@ -74,7 +74,7 @@ if [ $? -eq 0 ]; then
 
   cd $SRC_DIR/$POST_URL_DIR || exit
 
-  if ! grep -A 1 -Eqi "^comments:" "$(ls -tr | tail -1)" | grep "}" ; then
+  if grep -A 1 -E "^comments:" "$(ls -tr | tail -1)" | grep -qi "}" ; then
     if [ "$FEDI_CMT" = "y" ]; then
       fedi_posts
       git_commit
