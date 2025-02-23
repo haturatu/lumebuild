@@ -73,9 +73,8 @@ if [ $? -eq 0 ]; then
   $WEBPSH
 
   cd $SRC_DIR/$POST_URL_DIR || exit
-  egrep "^comments:" "$(ls -tr | tail -1)" | grep "}"
 
-  if [ $? -eq 0 ]; then
+  if ! grep -A 1 -Eqi "^comments:" "$(ls -tr | tail -1)" | grep "}" ; then
     if [ "$FEDI_CMT" = "y" ]; then
       fedi_posts
       git_commit
