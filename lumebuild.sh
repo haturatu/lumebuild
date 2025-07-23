@@ -45,7 +45,11 @@ fedi_posts() {
     LAST_POST=`ls -tr | tail -1`
     POST_URL=`echo "$BLOG_URL/$POST_URL_DIR/$LAST_POST/" | sed "s/\.md//g"`
     TITLE=`grep "^title: " "$LAST_POST" | sed "s/^title: //g"`
-    MSTDN_URL=`toot post "$TITLE - $POST_URL" | sed "s/Toot posted: //g" `
+
+    toot post "$TITLE - $POST_URL" > "/tmp/temp_toot"
+    MSTDN_URL=`cat "/tmp/temp_toot" | sed "s/Toot posted: //g" `
+    rm -f "/tmp/temp_toot"
+
     INS_TXT=`cat <<EOF
 comments:
   src: '$MSTDN_URL'
