@@ -68,6 +68,24 @@ EOF`
     sed -i '/comments: {}/d' "$LAST_POST"
 }
 
+should_toot() {
+  local file=$1
+
+  if [ ! -f "$file" ]; then
+    return 1
+  fi
+
+  if grep -q 'draft: true' "$file"; then
+    return 1
+  fi
+
+  if (grep -A 1 -E "^comments:" "$file" | grep -q "src:"); then
+    return 1
+  fi
+
+  return 0
+}
+
 ########################
 # Main
 ########################
@@ -81,7 +99,7 @@ if [ $? -eq 0 ]; then
 
   latest_file=$(ls -tr | tail -1)
 
-  if ! grep -q 'draft: true' "$latest_file" && ! grep -A 1 -E "^comments:" "$latest_file" | grep -qi "}"; then
+  if should_toot "$latest_file"; then
     if [ "$FEDI_CMT" = "y" ]; then
       fedi_posts
       git_commit
