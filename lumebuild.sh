@@ -43,8 +43,9 @@ build() {
 
 fedi_posts() {
     LAST_POST=`ls -tr | tail -1`
-    POST_URL=`echo "$BLOG_URL/$POST_URL_DIR/$LAST_POST/" | sed "s/\.md//g"`
-    TITLE=`grep "^title: " "$LAST_POST" | sed "s/^title: //g"`
+    JSON_FEED=$(curl -s "$BLOG_URL/feed.json")
+    POST_URL=$(echo "$JSON_FEED" | jq -r '.items[0].url')
+    TITLE=$(echo "$JSON_FEED" | jq -r '.items[0].title')
 
     toot post "$TITLE - $POST_URL" > "/tmp/temp_toot"
     MSTDN_URL=`cat "/tmp/temp_toot" | sed "s/Toot posted: //g" `
