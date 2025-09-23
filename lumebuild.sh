@@ -40,6 +40,7 @@ readonly CHECKSUM_FILE="/home/${USER}/.lumebuild_checksums"
 # File patterns to include in checksums.
 readonly PATTERNS=("*.md" "*.js" "*.vto")
 
+
 ################################################################################
 # FUNCTIONS
 ################################################################################
@@ -188,22 +189,26 @@ EOF
     sed -i '/comments: {}/d' "${post_file}"
 }
 
+
 # Check if a post should be sent to the Fediverse.
 should_toot() {
   local file=$1
 
   # If file doesn't exist, skip
   if [ ! -f "$file" ]; then
+    echo "Info: should_toot No File"
     return 1
   fi
 
   # If draft is true, skip
   if grep -q 'draft: true' "$file"; then
+    echo "Info: should_toot draft: true"
     return 1
   fi
 
   # If comments section already has a src with http, skip
-  if (grep -A 1 -E "^comments:" "$file" | grep "src:" | grep -q "http" ); then
+  if grep -A 1 -E "^comments:" "$file" | grep "src:" | grep -q "http" ; then
+    echo "Info: should_toot comments: src: http OK"
     return 1
   fi
 
@@ -254,6 +259,9 @@ should_toot() {
 
 main() {
   check_commands
+  local latest_file
+  latest_file=$(ls -tr "${SRC_DIR}/${POST_URL_DIR}" | tail -1)
+  local latest_file_path="${SRC_DIR}/${POST_URL_DIR}/${latest_file}"
 
   if ! check_changes; then
       echo "Info: No changes detected. Nothing to do."
@@ -271,10 +279,6 @@ main() {
   build_site "${TMP_BUILD_DIR}"
   sync_site "${TMP_BUILD_DIR}"
   echo "Info: Initial build complete."
-
-  local latest_file
-  latest_file=$(ls -tr "${SRC_DIR}/${POST_URL_DIR}" | tail -1)
-  local latest_file_path="${SRC_DIR}/${POST_URL_DIR}/${latest_file}"
 
   if should_toot "${latest_file_path}" && [ "${FEDI_CMT}" = "y" ]; then
       echo "Info: New post found. Posting to Fediverse..."
